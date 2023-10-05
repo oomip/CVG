@@ -10,7 +10,8 @@ public class Player2Controls : MonoBehaviour {
   [SerializeField] private float moveDuration = 0.1f;
   // The size of the grid
   [SerializeField] private float gridSize = 1f;
-
+  private float gridxBound = 10f;
+  private float gridyBound = 6f;
   private bool isMoving = false;
 
   // Update is called once per frame
@@ -57,20 +58,26 @@ public class Player2Controls : MonoBehaviour {
     Vector2 startPosition = transform.position;
     Vector2 endPosition = startPosition + (direction * gridSize);
 
-    // Smoothly move in the desired direction taking the required time.
-    float elapsedTime = 0;
-    while (elapsedTime < moveDuration) {
-      elapsedTime += Time.deltaTime;
-      float percent = elapsedTime / moveDuration;
-      transform.position = Vector2.Lerp(startPosition, endPosition, percent);
-      yield return null;
+    // keep player within bounds
+    if (endPosition[0] <= gridxBound && endPosition[1] <= gridyBound) {
+      if (endPosition[0] > 0 && endPosition[1] > 0) {
+
+        // Smoothly move in the desired direction taking the required time.
+        float elapsedTime = 0;
+        while (elapsedTime < moveDuration) {
+          elapsedTime += Time.deltaTime;
+          float percent = elapsedTime / moveDuration;
+          transform.position = Vector2.Lerp(startPosition, endPosition, percent);
+          yield return null;
+        }
+
+        // Make sure we end up exactly where we want.
+        transform.position = endPosition;
+      }
     }
 
-    // Make sure we end up exactly where we want.
-    transform.position = endPosition;
 
     // We're no longer moving so we can accept another move input.
     isMoving = false;
   }
 }
-
