@@ -10,9 +10,9 @@ public class Player2Controls : MonoBehaviour {
   [SerializeField] private float moveDuration = 0.1f;
   // The size of the grid
   [SerializeField] private float gridSize = 1f;
-  private float gridxBound = 10f;
-  private float gridyBound = 6f;
   private bool isMoving = false;
+  private Vector2 facingDirection = Vector2.left;
+  public GridManager gridManager;
 
   // Update is called once per frame
   private void Update() {
@@ -30,21 +30,31 @@ public class Player2Controls : MonoBehaviour {
 
       // If the input function is active, move in the appropriate direction.
       if (inputFunction(KeyCode.Y)) {
-        StartCoroutine(Move(Vector2.up));
+        facingDirection = Vector2.up;
+        StartCoroutine(Move(facingDirection));
       } else if (inputFunction(KeyCode.N)) {
-        StartCoroutine(Move(Vector2.down));
+        facingDirection = Vector2.down;
+        StartCoroutine(Move(facingDirection));
       } else if (inputFunction(KeyCode.G)) {
-        StartCoroutine(Move(Vector2.left));
+        facingDirection = Vector2.left;
+        StartCoroutine(Move(facingDirection));
       } else if (inputFunction(KeyCode.J)) {
-        StartCoroutine(Move(Vector2.right));
+        facingDirection = Vector2.right;
+        StartCoroutine(Move(facingDirection));
       } else if (inputFunction(KeyCode.T)) {
-        StartCoroutine(Move(Vector2.up + Vector2.left));
+        facingDirection = Vector2.up + Vector2.left;
+        StartCoroutine(Move(facingDirection));
       } else if (inputFunction(KeyCode.U)) {
-        StartCoroutine(Move(Vector2.up + Vector2.right));
+        facingDirection = Vector2.up + Vector2.right;
+        StartCoroutine(Move(facingDirection));
       } else if (inputFunction(KeyCode.B)) {
-        StartCoroutine(Move(Vector2.down + Vector2.left));
+        facingDirection = Vector2.down + Vector2.left;
+        StartCoroutine(Move(facingDirection));
       } else if (inputFunction(KeyCode.M)) {
-        StartCoroutine(Move(Vector2.down + Vector2.right));
+        facingDirection = Vector2.down + Vector2.right;
+        StartCoroutine(Move(facingDirection));
+      } else if (inputFunction(KeyCode.H)) {
+        gridManager.GenerateDeathTile((Vector2) transform.position + facingDirection);
       }
     }
   }
@@ -58,22 +68,44 @@ public class Player2Controls : MonoBehaviour {
     Vector2 startPosition = transform.position;
     Vector2 endPosition = startPosition + (direction * gridSize);
 
-    // keep player within bounds
-    if (endPosition[0] <= gridxBound && endPosition[1] <= gridyBound) {
-      if (endPosition[0] > 0 && endPosition[1] > 0) {
+    // if player moves onto DeathTile, die!!
+    if (gridManager.GetTileAtPosition(endPosition) is DeathTile) {
+      Destroy(gameObject);
+    }
 
-        // Smoothly move in the desired direction taking the required time.
-        float elapsedTime = 0;
-        while (elapsedTime < moveDuration) {
-          elapsedTime += Time.deltaTime;
-          float percent = elapsedTime / moveDuration;
-          transform.position = Vector2.Lerp(startPosition, endPosition, percent);
-          yield return null;
-        }
-
-        // Make sure we end up exactly where we want.
-        transform.position = endPosition;
+    // if player moves diagonally against a wall, move ordinally
+    if (gridManager.GetTileAtPosition(endPosition) == null) {
+      // left wall
+      if (gridManager.GetTileAtPosition(endPosition + (Vector2.right * gridSize))) {
+        endPosition = endPosition + (Vector2.right * gridSize);
       }
+      // right wall
+      if (gridManager.GetTileAtPosition(endPosition + Vector2.left*gridSize)) {
+        endPosition = endPosition + (Vector2.left * gridSize);
+      }
+      // bottom wall
+      if (gridManager.GetTileAtPosition(endPosition + Vector2.up*gridSize)) {
+        endPosition = endPosition + (Vector2.up * gridSize);
+      }
+      // top wall
+      if (gridManager.GetTileAtPosition(endPosition + Vector2.down*gridSize)) {
+        endPosition = endPosition + (Vector2.down * gridSize);
+      }
+    }
+
+    // keep player within bounds
+    if (gridManager.GetTileAtPosition(endPosition) != null) {
+      // Smoothly move in the desired direction taking the required time.
+      float elapsedTime = 0;
+      while (elapsedTime < moveDuration) {
+        elapsedTime += Time.deltaTime;
+        float percent = elapsedTime / moveDuration;
+        transform.position = Vector2.Lerp(startPosition, endPosition, percent);
+        yield return null;
+      }
+
+      // Make sure we end up exactly where we want.
+      transform.position = endPosition;
     }
 
 
