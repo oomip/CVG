@@ -40,12 +40,13 @@ public class GridManager : MonoBehaviour {
         int y = (int) pos[1];
         if (GetTileAtPosition(pos) != null) {
             Destroy(GetTileAtPosition(pos));
+
+            var spawnedTile = Instantiate(_deathTile, new Vector3(x,y), Quaternion.identity);
+            spawnedTile.name = $"Tile {x} {y}";
+
+            spawnedTile.Init(x,y);
+
+            _tiles[pos] = spawnedTile;
         }
-        var spawnedTile = Instantiate(_deathTile, new Vector3(x,y), Quaternion.identity);
-        spawnedTile.name = $"Tile {x} {y}";
-
-        spawnedTile.Init(x,y);
-
-        _tiles[pos] = spawnedTile;
     }
 }

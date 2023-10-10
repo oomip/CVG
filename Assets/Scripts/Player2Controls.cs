@@ -16,6 +16,12 @@ public class Player2Controls : MonoBehaviour {
 
   // Update is called once per frame
   private void Update() {
+
+    // if player is on DeathTile, die!!
+    if (gridManager.GetTileAtPosition(transform.position) is DeathTile) {
+      Destroy(gameObject);
+    }
+
     // Only process on move at a time.
     if (!isMoving) {
       // Accomodate two different types of moving.
@@ -80,15 +86,15 @@ public class Player2Controls : MonoBehaviour {
         endPosition = endPosition + (Vector2.right * gridSize);
       }
       // right wall
-      if (gridManager.GetTileAtPosition(endPosition + Vector2.left*gridSize)) {
+      else if (gridManager.GetTileAtPosition(endPosition + Vector2.left*gridSize)) {
         endPosition = endPosition + (Vector2.left * gridSize);
       }
       // bottom wall
-      if (gridManager.GetTileAtPosition(endPosition + Vector2.up*gridSize)) {
+      else if (gridManager.GetTileAtPosition(endPosition + Vector2.up*gridSize)) {
         endPosition = endPosition + (Vector2.up * gridSize);
       }
       // top wall
-      if (gridManager.GetTileAtPosition(endPosition + Vector2.down*gridSize)) {
+      else if (gridManager.GetTileAtPosition(endPosition + Vector2.down*gridSize)) {
         endPosition = endPosition + (Vector2.down * gridSize);
       }
     }
