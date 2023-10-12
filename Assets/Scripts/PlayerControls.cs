@@ -11,8 +11,8 @@ public class PlayerControls : MonoBehaviour {
   // The size of the grid
   [SerializeField] private float gridSize = 1f;
   private bool isMoving = false;
-  private Vector2 facingDirection = Vector2.right;
-
+  public static Vector2 facingDirectionP1 = Vector2.right;
+  private (Vector2, Vector2) adjacentDirections = (Vector2.right + Vector2.up, Vector2.right + Vector2.down);
   public GridManager gridManager;
 
   // Update is called once per frame
@@ -34,34 +34,65 @@ public class PlayerControls : MonoBehaviour {
         inputFunction = Input.GetKeyDown;
       }
 
-      // If the input function is active, move in the appropriate direction.
-      if (inputFunction(KeyCode.W)) {
-        facingDirection = Vector2.up;
-        StartCoroutine(Move(facingDirection));
-      } else if (inputFunction(KeyCode.X)) {
-        facingDirection = Vector2.down;
-        StartCoroutine(Move(facingDirection));
-      } else if (inputFunction(KeyCode.A)) {
-        facingDirection = Vector2.left;
-        StartCoroutine(Move(facingDirection));
-      } else if (inputFunction(KeyCode.D)) {
-        facingDirection = Vector2.right;
-        StartCoroutine(Move(facingDirection));
-      } else if (inputFunction(KeyCode.Q)) {
-        facingDirection = Vector2.up + Vector2.left;
-        StartCoroutine(Move(facingDirection));
-      } else if (inputFunction(KeyCode.E)) {
-        facingDirection = Vector2.up + Vector2.right;
-        StartCoroutine(Move(facingDirection));
-      } else if (inputFunction(KeyCode.Z)) {
-        facingDirection = Vector2.down + Vector2.left;
-        StartCoroutine(Move(facingDirection));
-      } else if (inputFunction(KeyCode.C)) {
-        facingDirection = Vector2.down + Vector2.right;
-        StartCoroutine(Move(facingDirection));
-      } else if (inputFunction(KeyCode.S)) {
-        gridManager.GenerateDeathTile((Vector2) transform.position + facingDirection);
-      }
+        // If the input function is active, move in the appropriate direction.
+        if (inputFunction(KeyCode.W))
+        {
+            facingDirectionP1 = Vector2.up;
+            adjacentDirections = (Vector2.up + Vector2.right, Vector2.up + Vector2.left);
+            StartCoroutine(Move(facingDirectionP1));
+        }
+        else if (inputFunction(KeyCode.X))
+        {
+            facingDirectionP1 = Vector2.down;
+            adjacentDirections = (Vector2.down + Vector2.right, Vector2.down + Vector2.left);
+            StartCoroutine(Move(facingDirectionP1));
+        }
+        else if (inputFunction(KeyCode.A))
+        {
+            facingDirectionP1 = Vector2.left;
+            adjacentDirections = (Vector2.left + Vector2.up, Vector2.left + Vector2.down);
+            StartCoroutine(Move(facingDirectionP1));
+        }
+        else if (inputFunction(KeyCode.D))
+        {
+            facingDirectionP1 = Vector2.right;
+            adjacentDirections = (Vector2.right + Vector2.up, Vector2.right + Vector2.down);
+            StartCoroutine(Move(facingDirectionP1));
+        }
+        else if (inputFunction(KeyCode.Q))
+        {
+            facingDirectionP1 = Vector2.up + Vector2.left;
+            adjacentDirections = (Vector2.up + Vector2.up, Vector2.left + Vector2.left);
+            StartCoroutine(Move(facingDirectionP1));
+        }
+        else if (inputFunction(KeyCode.E))
+        {
+            facingDirectionP1 = Vector2.up + Vector2.right;
+            adjacentDirections = (Vector2.up + Vector2.up, Vector2.right + Vector2.right);
+            StartCoroutine(Move(facingDirectionP1));
+        }
+        else if (inputFunction(KeyCode.Z))
+        {
+            facingDirectionP1 = Vector2.down + Vector2.left;
+            adjacentDirections = (Vector2.down + Vector2.down, Vector2.left + Vector2.left);
+            StartCoroutine(Move(facingDirectionP1));
+        }
+        else if (inputFunction(KeyCode.C))
+        {
+            facingDirectionP1 = Vector2.down + Vector2.right;
+            adjacentDirections = (Vector2.down + Vector2.down, Vector2.right + Vector2.right);
+            StartCoroutine(Move(facingDirectionP1));
+        }
+        else if (inputFunction(KeyCode.S))
+        {
+            gridManager.GenerateDeathTile((Vector2)transform.position + facingDirectionP1);
+
+            if (QuakeSpell.quakeActive == true)
+            {
+                gridManager.GenerateDeathTile((Vector2)transform.position + adjacentDirections.Item1);
+                gridManager.GenerateDeathTile((Vector2)transform.position + adjacentDirections.Item2);
+            }
+        }
     }
   }
 
