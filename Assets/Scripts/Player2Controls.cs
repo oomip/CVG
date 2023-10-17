@@ -17,15 +17,17 @@ public class Player2Controls : MonoBehaviour {
   public Vector2 startingLocation;
   public QuakeSpell quakeSpell;
   public GridManager gridManager;
+  // Scheduling
+  private float nextActionTime = 0.0f;
+  public float period = 3f;
 
 
   // // Spells
-  // public static bool quakeSpell = false;
-  // public static bool glideSpell = false;
-  // public static bool gustSpell = false;
-  // public static bool castawaySpell = false;
-  // public static bool teleportOpponentSpell = false;
-  // public List<bool> spells = new List<bool>(){quakeSpell,glideSpell,gustSpell,castawaySpell,teleportOpponentSpell};
+  private static bool glideSpell = false;
+  private static bool gustSpell = false;
+  private static bool castawaySpell = false;
+  private static bool teleportOpponentSpell = false;
+  public List<bool> spells = new List<bool>(){glideSpell};
 
 
 
@@ -43,15 +45,32 @@ public class Player2Controls : MonoBehaviour {
     bool moveDown = verticalInput < -threshold;
 
     // // collect spells periodically
-    // if (Time.time > nextActionTime ) {
-    //   nextActionTime += period;
+    if (Time.time > nextActionTime ) {
+      nextActionTime += period;
 
       // // don't give more than 2 spells
-      // if ((spells.Where(s=>s)).Count() < 2) {
-      //   spells[Random.Range(0,4)] = true;
-      // }
+      int num_spells = 0;
+      for (int i = 0; i < spells.Count; i++) {
+        num_spells += 1;
+      }
+      if (num_spells < 2) {
+        switch (Random.Range(0,3)) {
+          case (0):
+            glideSpell = !glideSpell;
+            break;
+          case (1):
+            gustSpell = true;
+            break;
+          case (2):
+            castawaySpell = true;
+            break;
+          case (3):
+            teleportOpponentSpell = true;
+            break;
+        }
+      }
 
-    // }
+    }
 
     // if player is on DeathTile, die!!
     if (gridManager.GetTileAtPosition(transform.position) is DeathTile) {
@@ -158,11 +177,12 @@ public class Player2Controls : MonoBehaviour {
   }
   public void reset_position() {
     transform.position = startingLocation;
+    new WaitForSeconds(moveDelay);
   }
   void OnGUI()
   {
       GUI.Label(new Rect(900, 10, 1000, 20), $"Radish Score: {score}");
-      GUI.Label(new Rect(400, 10, 5000, 20), $"Quaking: {quakeSpell.isQuakeActive()}");
+      GUI.Label(new Rect(400, 10, 500, 20), $"Quaking: {quakeSpell.isQuakeActive()}");
   }
 
 }

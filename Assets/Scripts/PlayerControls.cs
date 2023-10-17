@@ -17,6 +17,18 @@ public class PlayerControls : MonoBehaviour {
   public Vector2 startingLocation;
   public QuakeSpell quakeSpell;
   public GridManager gridManager;
+  // Scheduling
+  private float nextActionTime = 0.0f;
+  public float period = 3f;
+
+
+  // Spells
+  private static bool glideSpell = false;
+  private static bool gustSpell = false;
+  private static bool castawaySpell = false;
+  private static bool teleportOpponentSpell = false;
+  public List<bool> spells = new List<bool>(){glideSpell};
+
 
   // Update is called once per frame
   private void Update() {
@@ -39,11 +51,38 @@ public class PlayerControls : MonoBehaviour {
     }
 
 
-    // Gust Spell
-    //if (GustSpell.gustActive == true)
-    //{
-    //    StartCoroutine(Move(facingDirectionP1));
-    //}
+    // // collect spells periodically
+    if (Time.time > nextActionTime ) {
+      nextActionTime += period;
+
+      // // don't give more than 2 spells
+      int num_spells = 0;
+      for (int i = 0; i < spells.Count; i++) {
+        num_spells += 1;
+      }
+      if (num_spells < 2) {
+        switch (Random.Range(0,3)) {
+          case (0):
+            glideSpell = !glideSpell;
+            break;
+          case (1):
+            gustSpell = true;
+            break;
+          case (2):
+            castawaySpell = true;
+            break;
+          case (3):
+            teleportOpponentSpell = true;
+            break;
+        }
+      }
+    }
+
+    // // Gust Spell
+    // if (gustSpell)
+    // {
+    //   StartCoroutine(Move(facingDirectionP1));
+    // }
 
     // Only process one move at a time.
     if (!isMoving) {
@@ -135,6 +174,7 @@ public class PlayerControls : MonoBehaviour {
   }
   public void reset_position() {
     transform.position = startingLocation;
+    new WaitForSeconds(moveDelay);
   }
 
   void OnGUI()
