@@ -198,9 +198,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6362fbd0241e234d89f0c9243d933179, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isRepeatedMovement: 0
   moveDuration: 0.1
   gridSize: 1
+  moveDelay: 0.2
+  score: 0
+  player1: {fileID: 1695120830}
+  startingLocation: {x: 8, y: 2}
   gridManager: {fileID: 1600443872}
 --- !u!50 &379369067
 Rigidbody2D:
@@ -594,9 +597,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c7aa18b19be39ab8a3186773104c62d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isRepeatedMovement: 0
   moveDuration: 0.1
   gridSize: 1
+  moveDelay: 0.2
+  score: 0
+  player2: {fileID: 379369066}
+  startingLocation: {x: 3, y: 5}
   gridManager: {fileID: 1600443872}
 --- !u!50 &1695120831
 Rigidbody2D:

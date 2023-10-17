@@ -49,4 +49,19 @@ public class GridManager : MonoBehaviour {
             _tiles[pos] = spawnedTile;
         }
     }
+    public void ClearDeathTiles() {
+        for (int x = 0; x < _width; x++) {
+            for (int y = 0; y < _height; y++) {
+                Vector2 pos = new Vector2(x,y);
+                Destroy(GetTileAtPosition(pos));
+
+                var spawnedTile = Instantiate(_earthTile, new Vector3(x,y), Quaternion.identity);
+                spawnedTile.name = $"Tile {x} {y}";
+
+                spawnedTile.Init(x,y);
+
+                _tiles[pos] = spawnedTile;
+            }
+        }
+    }
 }
