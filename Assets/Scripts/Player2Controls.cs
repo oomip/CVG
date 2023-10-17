@@ -17,8 +17,20 @@ public class Player2Controls : MonoBehaviour {
   public Vector2 startingLocation;
   public GridManager gridManager;
 
+
+  // // Spells
+  // public static bool quakeSpell = false;
+  // public static bool glideSpell = false;
+  // public static bool gustSpell = false;
+  // public static bool castawaySpell = false;
+  // public static bool teleportOpponentSpell = false;
+  // public List<bool> spells = new List<bool>(){quakeSpell,glideSpell,gustSpell,castawaySpell,teleportOpponentSpell};
+
+
+
   // Update is called once per frame
   private void Update() {
+    // movement/attack inputs
     float horizontalInput = Input.GetAxis("Horizontal2");
     float verticalInput = Input.GetAxis("Vertical2");
     float attackInput = Input.GetAxis("Fire2");
@@ -28,6 +40,17 @@ public class Player2Controls : MonoBehaviour {
     bool moveRight = horizontalInput > threshold;
     bool moveUp = verticalInput > threshold;
     bool moveDown = verticalInput < -threshold;
+
+    // // collect spells periodically
+    // if (Time.time > nextActionTime ) {
+    //   nextActionTime += period;
+
+      // // don't give more than 2 spells
+      // if ((spells.Where(s=>s)).Count() < 2) {
+      //   spells[Random.Range(0,4)] = true;
+      // }
+
+    // }
 
     // if player is on DeathTile, die!!
     if (gridManager.GetTileAtPosition(transform.position) is DeathTile) {
@@ -61,7 +84,7 @@ public class Player2Controls : MonoBehaviour {
           {
             List<Vector2> deathTiles = new List<Vector2>();
             while (deathTiles.Count < 2) {
-              Vector2 nextSpot = UnityEngine.Random.Range(-1,1) * Vector2.right + UnityEngine.Random.Range(-1,1) * Vector2.up;
+              Vector2 nextSpot = (UnityEngine.Random.Range(0,2)-1) * Vector2.right * gridSize + (UnityEngine.Random.Range(0,2)-1) * Vector2.up * gridSize;
               if (nextSpot != Vector2.zero) {
                 deathTiles.Add(nextSpot);
               }
@@ -135,4 +158,10 @@ public class Player2Controls : MonoBehaviour {
   public void reset_position() {
     transform.position = startingLocation;
   }
+  void OnGUI()
+  {
+      GUI.Label(new Rect(900, 10, 1000, 20), $"Radish Score: {score}");
+      GUI.Label(new Rect(400, 10, 5000, 20), $"Quaking: {QuakeSpell.quakeActive}");
+  }
+
 }

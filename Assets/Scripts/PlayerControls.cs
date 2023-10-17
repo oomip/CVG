@@ -57,11 +57,12 @@ public class PlayerControls : MonoBehaviour {
       }
       else if (attackInput > threshold)
       {
+
           if (QuakeSpell.quakeActive == true)
           {
             List<Vector2> deathTiles = new List<Vector2>();
             while (deathTiles.Count < 2) {
-              Vector2 nextSpot = UnityEngine.Random.Range(-1,1) * Vector2.right + UnityEngine.Random.Range(-1,1) * Vector2.up;
+              Vector2 nextSpot = (UnityEngine.Random.Range(0,2)-1) * Vector2.right * gridSize + (UnityEngine.Random.Range(0,2)-1) * Vector2.up * gridSize;
               if (nextSpot != Vector2.zero) {
                 deathTiles.Add(nextSpot);
               }
@@ -133,5 +134,10 @@ public class PlayerControls : MonoBehaviour {
   }
   public void reset_position() {
     transform.position = startingLocation;
+  }
+
+  void OnGUI()
+  {
+      GUI.Label(new Rect(10, 10, 100, 20), $"Potato Score: {score}");
   }
 }
