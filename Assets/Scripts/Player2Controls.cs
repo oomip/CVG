@@ -53,27 +53,28 @@ public class Player2Controls : MonoBehaviour {
       for (int i = 0; i < spells.Count; i++) {
         num_spells += 1;
       }
-      if (num_spells < 2) {
-        switch (Random.Range(0,3)) {
-          case (0):
-            glideSpell = !glideSpell;
-            break;
-          case (1):
-            gustSpell = true;
-            break;
-          case (2):
-            castawaySpell = true;
-            break;
-          case (3):
-            teleportOpponentSpell = true;
-            break;
-        }
-      }
+      // if (num_spells < 2) {
+      //   switch (Random.Range(0,3)) {
+      //     case (0):
+      //       glideSpell = !glideSpell;
+      //       break;
+      //     case (1):
+      //       gustSpell = true;
+      //       break;
+      //     case (2):
+      //       castawaySpell = true;
+      //       break;
+      //     case (3):
+      //       teleportOpponentSpell = true;
+      //       break;
+      //   }
+      // }
 
     }
 
     // if player is on DeathTile, die!!
-    if (gridManager.GetTileAtPosition(transform.position) is DeathTile) {
+    // Doesn't die if glide is active
+    if (gridManager.GetTileAtPosition(transform.position) is DeathTile && !glideSpell) {
       gridManager.ClearDeathTiles();
       player1.increment_score();
       player1.reset_position();

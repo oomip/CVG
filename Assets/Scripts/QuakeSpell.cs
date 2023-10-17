@@ -20,7 +20,11 @@ public class QuakeSpell : MonoBehaviour
     {
 
         if (Time.time > nextActionTime ) {
-            nextActionTime += period;
+            if (quakeActive) {
+                nextActionTime += Random.Range(2,3) * period;
+            } else {
+                nextActionTime += period;
+            }
             quakeActive = !quakeActive;
         }
 

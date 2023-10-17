@@ -50,18 +50,7 @@ public class GridManager : MonoBehaviour {
         }
     }
     public void ClearDeathTiles() {
-        for (int x = 0; x < _width; x++) {
-            for (int y = 0; y < _height; y++) {
-                Vector2 pos = new Vector2(x,y);
-                Destroy(GetTileAtPosition(pos));
-
-                var spawnedTile = Instantiate(_earthTile, new Vector3(x,y), Quaternion.identity);
-                spawnedTile.name = $"Tile {x} {y}";
-
-                spawnedTile.Init(x,y);
-
-                _tiles[pos] = spawnedTile;
-            }
-        }
+        Dictionary<Vector2, Tile> _tiles = new Dictionary<Vector2, Tile>();
+        GenerateGrid();
     }
 }
