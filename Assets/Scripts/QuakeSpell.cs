@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class QuakeSpell : MonoBehaviour
 {
-    public static bool quakeActive = false;
+    private bool quakeActive = false;
     // Scheduling
     private float nextActionTime = 0.0f;
     public float period = 3f;
@@ -24,5 +24,8 @@ public class QuakeSpell : MonoBehaviour
             quakeActive = !quakeActive;
         }
 
+    }
+    public bool isQuakeActive() {
+        return quakeActive;
     }
 }

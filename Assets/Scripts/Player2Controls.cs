@@ -15,6 +15,7 @@ public class Player2Controls : MonoBehaviour {
   private bool isMoving = false;
   public static Vector2 facingDirectionP2 = Vector2.left;
   public Vector2 startingLocation;
+  public QuakeSpell quakeSpell;
   public GridManager gridManager;
 
 
@@ -80,7 +81,7 @@ public class Player2Controls : MonoBehaviour {
       else if (attackInput > threshold)
       {
 
-          if (QuakeSpell.quakeActive == true)
+          if (quakeSpell.isQuakeActive())
           {
             List<Vector2> deathTiles = new List<Vector2>();
             while (deathTiles.Count < 2) {
@@ -161,7 +162,7 @@ public class Player2Controls : MonoBehaviour {
   void OnGUI()
   {
       GUI.Label(new Rect(900, 10, 1000, 20), $"Radish Score: {score}");
-      GUI.Label(new Rect(400, 10, 5000, 20), $"Quaking: {QuakeSpell.quakeActive}");
+      GUI.Label(new Rect(400, 10, 5000, 20), $"Quaking: {quakeSpell.isQuakeActive()}");
   }
 
 }

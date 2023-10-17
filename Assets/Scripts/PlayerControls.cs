@@ -15,6 +15,7 @@ public class PlayerControls : MonoBehaviour {
   private bool isMoving = false;
   public static Vector2 facingDirectionP1 = Vector2.left;
   public Vector2 startingLocation;
+  public QuakeSpell quakeSpell;
   public GridManager gridManager;
 
   // Update is called once per frame
@@ -58,7 +59,7 @@ public class PlayerControls : MonoBehaviour {
       else if (attackInput > threshold)
       {
 
-          if (QuakeSpell.quakeActive == true)
+          if (quakeSpell.isQuakeActive())
           {
             List<Vector2> deathTiles = new List<Vector2>();
             while (deathTiles.Count < 2) {

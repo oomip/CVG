@@ -204,6 +204,7 @@ MonoBehaviour:
   score: 0
   player1: {fileID: 1695120830}
   startingLocation: {x: 8, y: 2}
+  quakeSpell: {fileID: 1462171753}
   gridManager: {fileID: 1600443872}
 --- !u!50 &379369067
 Rigidbody2D:
@@ -274,7 +275,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 5
   m_Sprite: {fileID: 21300000, guid: 370419a45e2d7b2d3b2cff4be815eb00, type: 3}
-  m_Color: {r: 0.87611467, g: 0.10071782, b: 0.9150943, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -586,6 +587,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1462171752
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1462171754}
+  - component: {fileID: 1462171753}
+  m_Layer: 0
+  m_Name: QuakeSpell
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1462171753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1462171752}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b06738809a96f423db335d18ef07f3f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  period: 3
+--- !u!4 &1462171754
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1462171752}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.6534116, y: 4.7594466, z: -0.0029296875}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1600443871
 GameObject:
   m_ObjectHideFlags: 0
@@ -671,6 +717,7 @@ MonoBehaviour:
   score: 0
   player2: {fileID: 379369066}
   startingLocation: {x: 3, y: 5}
+  quakeSpell: {fileID: 1462171753}
   gridManager: {fileID: 1600443872}
 --- !u!50 &1695120831
 Rigidbody2D:
@@ -777,3 +824,4 @@ SceneRoots:
   - {fileID: 1600443873}
   - {fileID: 1695120833}
   - {fileID: 673112580}
+  - {fileID: 1462171754}
