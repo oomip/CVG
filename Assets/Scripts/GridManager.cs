@@ -35,6 +35,12 @@ public class GridManager : MonoBehaviour {
         if (_tiles.TryGetValue(pos, out var tile)) return tile;
         return null;
     }
+    public bool CheckSafetyOfPosition(Vector2 pos) {
+        if (this.GetTileAtPosition(pos) == null) {
+            return false;
+        }
+        return (this.GetTileAtPosition(pos).name.Contains("DeathTile"));
+    }
     public void GenerateDeathTile(Vector2 pos) {
         int x = (int) pos[0];
         int y = (int) pos[1];
@@ -42,7 +48,7 @@ public class GridManager : MonoBehaviour {
             Destroy(GetTileAtPosition(pos));
 
             var spawnedTile = Instantiate(_deathTile, new Vector3(x,y), Quaternion.identity);
-            spawnedTile.name = $"Tile {x} {y}";
+            spawnedTile.name = $"DeathTile {x} {y}";
 
             spawnedTile.Init(x,y);
 
