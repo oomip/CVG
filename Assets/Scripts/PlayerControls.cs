@@ -14,7 +14,7 @@ public class PlayerControls : MonoBehaviour {
   public PlayerControls otherPlayer;
   private bool isMoving = false;
   private bool isCastingSpell = false;
-  public static Vector2 facingDirection = Vector2.left;
+  public Vector2 facingDirection = Vector2.left;
   public Vector2 startingLocation;
   public QuakeSpell quakeSpell;
   public GridManager gridManager;
@@ -29,7 +29,8 @@ public class PlayerControls : MonoBehaviour {
   public Color movingColor;
   public Color notMovingColor;
   public int playerNumber;
-  public float nextDeathTile = 0.0f;
+  private AudioSource destroySound;
+
 
 
   // Spells
@@ -43,6 +44,9 @@ public class PlayerControls : MonoBehaviour {
   private float dashingTime = 0f;
   public List<string> availableSpells = new List<string>();
 
+  private void Start() {
+    destroySound = GetComponent<AudioSource>();
+  }
 
 
   // Update is called once per frame
@@ -98,9 +102,9 @@ public class PlayerControls : MonoBehaviour {
         }
       }
       if (glidingTime > 0) {
-        glidingTime -= 2;
+        glidingTime -= 1;
       } else if (dashingTime > 0) {
-        dashingTime -= 2;
+        dashingTime -= 1;
       } else {
         isCastingSpell = false;
         moveDelay = 0.2f;
@@ -111,6 +115,7 @@ public class PlayerControls : MonoBehaviour {
     if (gridManager.GetTileAtPosition(transform.position) is DeathTile && glidingTime <= 0) {
       gridManager.ClearDeathTiles();
       otherPlayer.incrementScore();
+      resetPosition();
       otherPlayer.resetPosition();
       transform.position = startingLocation;
     }
@@ -126,26 +131,29 @@ public class PlayerControls : MonoBehaviour {
         if (moveRight) { facingDirection += Vector2.right; }
         StartCoroutine(Move(facingDirection));
       }
-    }
-    if (attackInput > threshold && Time.time > nextDeathTile) {
-      // when Quaking, add 2 random ordinally adjacent deathTiles
-      if (quakeSpell.isQuakeActive()) {
-        List<Vector2> deathTiles = new List<Vector2>();
-        while (deathTiles.Count < 2) {
-          Vector2 nextSpot = (UnityEngine.Random.Range(0,2)-1) * Vector2.right * gridSize + (UnityEngine.Random.Range(0,2)-1) * Vector2.up * gridSize;
-          if (nextSpot != Vector2.zero) {
-            deathTiles.Add(nextSpot);
+      // Attacking.
+      if (attackInput > threshold) {
+        // Sound
+        destroySound.Play();
+
+        // when Quaking, add 2 random ordinally adjacent deathTiles
+        if (quakeSpell.isQuakeActive()) {
+          List<Vector2> deathTiles = new List<Vector2>();
+          while (deathTiles.Count < 2) {
+            Vector2 nextSpot = (UnityEngine.Random.Range(0,2)-1) * Vector2.right * gridSize + (UnityEngine.Random.Range(0,2)-1) * Vector2.up * gridSize;
+            if (nextSpot != Vector2.zero) {
+              deathTiles.Add(nextSpot);
+            }
           }
+          gridManager.GenerateDeathTile((Vector2)transform.position + deathTiles[0]);
+          gridManager.GenerateDeathTile((Vector2)transform.position + deathTiles[1]);
+          StartCoroutine(Move(Vector2.zero));
+        // when not Quaking, add deathTile at tile they're facing
+        } else {
+          gridManager.GenerateDeathTile((Vector2)transform.position + facingDirection);
+          StartCoroutine(Move(Vector2.zero));
         }
-        gridManager.GenerateDeathTile((Vector2)transform.position + deathTiles[0]);
-        gridManager.GenerateDeathTile((Vector2)transform.position + deathTiles[1]);
-        StartCoroutine(Move(Vector2.zero));
-      // when not Quaking, add deathTile at tile they're facing
-      } else {
-        gridManager.GenerateDeathTile((Vector2)transform.position + facingDirection);
-        StartCoroutine(Move(Vector2.zero));
       }
-      nextDeathTile = Time.time + 0.5f;
     }
 
     // Spell activation.
@@ -225,7 +233,7 @@ public class PlayerControls : MonoBehaviour {
     }
     // Glide Spell
     if (activeSpell == "Glide") {
-      glidingTime = 4;
+      glidingTime = 2;
       isCastingSpell = true;
     }
     // Gust Spell
@@ -248,14 +256,20 @@ public class PlayerControls : MonoBehaviour {
   public void incrementScore() {
     this.score += 1;
   }
+  public Vector2 getFacingDirection() {
+    return facingDirection;
+  }
+  public Vector3 getPos() {
+    return transform.position;
+  }
   public void pushInDirection(Vector2 dir) {
     StartCoroutine(Move(dir));
   }
   public void moveToRandomTile() {
-    Vector2 pos = Vector2.zero;
-    while (gridManager.isPositionSafe(pos) != true)
-      pos = new Vector2(UnityEngine.Random.Range(1,10), UnityEngine.Random.Range(1,6));
-    Vector2 randomPos = pos * gridSize;
+    Vector2 pos = new Vector2(UnityEngine.Random.Range(1,10), UnityEngine.Random.Range(1,6)) * gridSize;
+    while (gridManager.GetTileAtPosition(pos) is DeathTile)
+      pos = new Vector2(UnityEngine.Random.Range(1,10), UnityEngine.Random.Range(1,6)) * gridSize;
+    Vector2 randomPos = pos;
     transform.position = randomPos;
   }
   public void resetPosition() {

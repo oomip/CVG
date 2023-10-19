@@ -9,6 +9,6 @@ public class DeathTile : Tile
     void Start()
     {
         _audioSource = GetComponent<AudioSource>();
-        _audioSource.Play();
+        // _audioSource.Play();
     }
 }
