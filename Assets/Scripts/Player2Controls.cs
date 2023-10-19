@@ -183,7 +183,9 @@ public class Player2Controls : MonoBehaviour {
   void OnGUI()
   {
       GUI.Label(new Rect(900, 10, 1000, 20), $"Radish Score: {score}");
-      GUI.Label(new Rect(400, 10, 500, 20), $"Quaking: {quakeSpell.isQuakeActive()}");
+      if (quakeSpell.isQuakeActive()) {
+        GUI.Label(new Rect(Screen.width/2, 10, Screen.width*3/2, 40), "QUAKING!");
+      }
   }
 
 }

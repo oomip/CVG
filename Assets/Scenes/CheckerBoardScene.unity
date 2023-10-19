@@ -314,7 +314,7 @@ GameObject:
   - component: {fileID: 506464299}
   - component: {fileID: 506464301}
   m_Layer: 0
-  m_Name: Background Color
+  m_Name: BackgroundColor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -399,6 +399,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40d88dfa387856a64bfd115f245b6060, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  quakeSpell: {fileID: 1462171753}
+  quakingColor: {r: 0.8885245, g: 0.21963441, b: 0.21963441, a: 1}
+  notQuakingColor: {r: 0.18352121, g: 0.18352121, b: 0.18352121, a: 1}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
