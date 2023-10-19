@@ -269,6 +269,7 @@ public class PlayerControls : MonoBehaviour {
       GUI.Label(new Rect(x1, y1, x2, y2), $"Potato Score: {score}");
 
       // Spells GUI
+      GUI.Label(new Rect(x1, y2/2-150, x2, y2/2), "Attack \n(Space)");
       GUI.Label(new Rect(x1, y2/2-100, x2, y2/2), "Spells \n(Q,E)");
       GUI.Label(new Rect(x1, y2/2, x2, y2/2+100), $"{spellsString}");
 
@@ -289,6 +290,7 @@ public class PlayerControls : MonoBehaviour {
       GUI.Label(new Rect(x1-100, y1, x2, y2), $"Radish Score: {score}");
 
       // Spells GUI
+      GUI.Label(new Rect(x1, y2/2-150, x2, y2/2), "Attack \n(B)");
       GUI.Label(new Rect(x1, y2/2-50, x2, y2/2), "Spells \n(A,Y)");
       GUI.Label(new Rect(x1, y2/2, x2, y2/2+100), $"{spellsString}");
 
