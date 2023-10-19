@@ -35,7 +35,7 @@ public class GridManager : MonoBehaviour {
         if (_tiles.TryGetValue(pos, out var tile)) return tile;
         return null;
     }
-    public bool CheckSafetyOfPosition(Vector2 pos) {
+    public bool isPositionSafe(Vector2 pos) {
         if (this.GetTileAtPosition(pos) == null) {
             return false;
         }

@@ -29,6 +29,7 @@ public class PlayerControls : MonoBehaviour {
   public Color movingColor;
   public Color notMovingColor;
   public int playerNumber;
+  public float nextDeathTile = 0.0f;
 
 
   // Spells
@@ -98,9 +99,10 @@ public class PlayerControls : MonoBehaviour {
       }
       if (glidingTime > 0) {
         glidingTime -= 2;
-      }
-      if (dashingTime > 0) {
+      } else if (dashingTime > 0) {
         dashingTime -= 2;
+      } else {
+        isCastingSpell = false;
         moveDelay = 0.2f;
       }
     }
@@ -125,7 +127,7 @@ public class PlayerControls : MonoBehaviour {
         StartCoroutine(Move(facingDirection));
       }
     }
-    if (attackInput > threshold) {
+    if (attackInput > threshold && Time.time > nextDeathTile) {
       // when Quaking, add 2 random ordinally adjacent deathTiles
       if (quakeSpell.isQuakeActive()) {
         List<Vector2> deathTiles = new List<Vector2>();
@@ -143,6 +145,7 @@ public class PlayerControls : MonoBehaviour {
         gridManager.GenerateDeathTile((Vector2)transform.position + facingDirection);
         StartCoroutine(Move(Vector2.zero));
       }
+      nextDeathTile = Time.time + 0.5f;
     }
 
     // Spell activation.
@@ -215,12 +218,15 @@ public class PlayerControls : MonoBehaviour {
 
 
   private IEnumerator Cast(string activeSpell) {
-    isCastingSpell = true;
     spells[activeSpell] = false;
 
+    if (isCastingSpell) {
+      yield return new WaitForSeconds(0.2f);
+    }
     // Glide Spell
     if (activeSpell == "Glide") {
       glidingTime = 4;
+      isCastingSpell = true;
     }
     // Gust Spell
     if (activeSpell == "Gust") {
@@ -230,12 +236,12 @@ public class PlayerControls : MonoBehaviour {
     if (activeSpell == "Dash") {
       moveDelay = 0.1f;
       dashingTime = 2;
+      isCastingSpell = true;
     }
     // Castaway Spell
     if (activeSpell == "Castaway") {
       otherPlayer.moveToRandomTile();
     }
-    isCastingSpell = false;
     yield return new WaitForSeconds(0.2f);
   }
 
@@ -247,7 +253,7 @@ public class PlayerControls : MonoBehaviour {
   }
   public void moveToRandomTile() {
     Vector2 pos = Vector2.zero;
-    while (gridManager.CheckSafetyOfPosition(pos) != true)
+    while (gridManager.isPositionSafe(pos) != true)
       pos = new Vector2(UnityEngine.Random.Range(1,10), UnityEngine.Random.Range(1,6));
     Vector2 randomPos = pos * gridSize;
     transform.position = randomPos;
@@ -258,8 +264,14 @@ public class PlayerControls : MonoBehaviour {
   }
   void OnGUI()
   {
-    string spellsString = string.Join("\n", availableSpells);
-
+    string spell1 = "";
+    string spell2 = "";
+    if (availableSpells.Count > 0) {
+      spell1 = availableSpells[0];
+      if (availableSpells.Count > 1) {
+        spell2 = availableSpells[1];
+      }
+    }
     if (playerNumber == 1) {
       float x1 = 5f;
       float x2 = 100f;
@@ -271,11 +283,11 @@ public class PlayerControls : MonoBehaviour {
       // Spells GUI
       GUI.Label(new Rect(x1, y2/2-150, x2, y2/2), "Attack \n(Space)");
       GUI.Label(new Rect(x1, y2/2-100, x2, y2/2), "Spells \n(Q,E)");
-      GUI.Label(new Rect(x1, y2/2, x2, y2/2+100), $"{spellsString}");
+      GUI.Label(new Rect(x1, y2/2, x2, y2/2+100), $"Q: {spell1}\nE: {spell2}");
 
       // Gliding/Dashing time
       GUI.Label(new Rect(x1, y2/2+40, x2, y2/2+150), $"Gliding {glidingTime}");
-      GUI.Label(new Rect(x1, y2/2+80, x2, y2/2+160), $"Dashing {glidingTime}");
+      GUI.Label(new Rect(x1, y2/2+80, x2, y2/2+160), $"Dashing {dashingTime}");
 
       // Quaking
       if (quakeSpell.isQuakeActive()) {
@@ -292,11 +304,11 @@ public class PlayerControls : MonoBehaviour {
       // Spells GUI
       GUI.Label(new Rect(x1, y2/2-150, x2, y2/2), "Attack \n(B)");
       GUI.Label(new Rect(x1, y2/2-50, x2, y2/2), "Spells \n(A,Y)");
-      GUI.Label(new Rect(x1, y2/2, x2, y2/2+100), $"{spellsString}");
+      GUI.Label(new Rect(x1, y2/2, x2, y2/2+100), $"A: {spell1}\nY: {spell2}");
 
       // Gliding/Dashing time
       GUI.Label(new Rect(x1, y2/2+40, x2, y2/2+150), $"Gliding {glidingTime}");
-      GUI.Label(new Rect(x1, y2/2+80, x2, y2/2+160), $"Dashing {glidingTime}");
+      GUI.Label(new Rect(x1, y2/2+80, x2, y2/2+160), $"Dashing {dashingTime}");
     }
   }
 
