@@ -4,4 +4,11 @@ using UnityEngine;
 
 public class DeathTile : Tile
 {
+    private AudioSource _audioSource;
+
+    void Start()
+    {
+        _audioSource = GetComponent<AudioSource>();
+        _audioSource.Play();
+    }
 }

@@ -29,6 +29,7 @@ public class PlayerControls : MonoBehaviour {
   public Color movingColor;
   public Color notMovingColor;
   public int playerNumber;
+  public float nextDeathTile = 0.0f;
 
 
   // Spells
@@ -125,7 +126,7 @@ public class PlayerControls : MonoBehaviour {
         StartCoroutine(Move(facingDirection));
       }
     }
-    if (attackInput > threshold) {
+    if (attackInput > threshold && Time.time > nextDeathTile) {
       // when Quaking, add 2 random ordinally adjacent deathTiles
       if (quakeSpell.isQuakeActive()) {
         List<Vector2> deathTiles = new List<Vector2>();
@@ -143,6 +144,8 @@ public class PlayerControls : MonoBehaviour {
         gridManager.GenerateDeathTile((Vector2)transform.position + facingDirection);
         StartCoroutine(Move(Vector2.zero));
       }
+
+      nextDeathTile = Time.time + 0.5f;
     }
 
     // Spell activation.
